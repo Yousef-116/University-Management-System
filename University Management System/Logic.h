@@ -32,19 +32,22 @@ struct Account
 	string password;
 };
 
-
-class Student 
+struct Personal_Info
 {
-public:
 	string name;
 	int SSN;
 	string address;
 	string phone_number;
 	string pirsonal_email;
+	Account account;
+};
+
+class Student 
+{
 
 public:
+	Personal_Info personal_info;
 	int id;
-	Account account;
 	short int max_hours_allowed;
 	unordered_map<string, float>finished_courses; // (float for) grade of course for strudet;
 	set<string>courses_in_progress;
@@ -89,7 +92,7 @@ public:
 
 
 extern unordered_map<string, Student>the_Students; // {username, object}
-extern unordered_map<string, Student>the_Coursese; // {code, object}
-extern unordered_map<string, Student>wating_list;
+extern unordered_map<string, Student>the_Courses; // {code, object}
+extern list<Personal_Info>wating_list;
 extern int student_id;
 extern Student* the_student;
