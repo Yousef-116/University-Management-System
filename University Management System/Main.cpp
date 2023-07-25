@@ -1,7 +1,8 @@
 #include "Logic.h"
 
 unordered_map<string, Student>the_Students;
-unordered_map<string, Student>the_Coursese;
+unordered_map<string, Student>the_Courses;
+list<Personal_Info>wating_list;
 Student* the_student = NULL;
 int student_id;
 

@@ -41,6 +41,9 @@ void Admin::menu()
 		else
 		{
 			INVALID;
+			cout << "Try again? (Y/y) -> "; getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				break;
 		}
 	}
 }

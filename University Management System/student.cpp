@@ -15,7 +15,6 @@ void Student::menu()
 		else if(ans == "2")
 		{
 			the_student->filter_courses();
-			
 		}
 		else if(ans == "3")
 		{
@@ -45,6 +44,9 @@ void Student::menu()
 		else
 		{
 			INVALID;
+			cout << "Try again? (Y/y) -> "; getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				break;
 		}
 	}
 
@@ -56,10 +58,10 @@ bool Student::log_in()
 	string ch;
 	while (true)
 	{
-		cout << " Username: "; getline(cin, this->account.email);
-		cout << " Passwrod: "; getline(cin, this->account.password);
-		auto it = the_Students.find(this->account.email);
-		if (it != the_Students.end() && it->second.account.password == this->account.password)
+		cout << " Username: "; getline(cin, this->personal_info.account.email);
+		cout << " Passwrod: "; getline(cin, this->personal_info.account.password);
+		auto it = the_Students.find(this->personal_info.account.email);
+		if (it != the_Students.end() && it->second.personal_info.account.password == this->personal_info.account.password)
 		{
 			the_student = &it->second;
 			MESS("You logged in successfully");
@@ -93,28 +95,35 @@ bool Student::log_out()
 bool Student::regist()
 {
 	MENU("Student Regist");
-	Student newstudent;
+	Personal_Info info;
 	cout << "Enter \n";
 	cout << "\n\tName : ";
-	getline(cin, newstudent.name);
+	getline(cin, info.name);
 	cout << "\tSSN : ";
-	cin >> newstudent.SSN;
+	cin >> info.SSN;
+	cin.ignore();
 	//getline(cin, newstudent.SSN);
 	cout << "\n\tAddress : "; 
-	getline(cin, newstudent.address);
+	getline(cin, info.address);
 	cout << "\n\tPhone number : ";
-	getline(cin, newstudent.phone_number);
+	getline(cin, info.phone_number);
 	cout << "\n\tPirsonal email : ";
-	getline(cin, newstudent.pirsonal_email);
+	getline(cin, info.pirsonal_email);
 	cout << "\n\tPassword : ";
-	getline(cin, newstudent.account.password);
+	getline(cin, info.account.password);
 	cout << "\n\tConfirme Password : ";
-	getline(cin, newstudent.account.password);
+	getline(cin, info.account.password);
 
-	//wating_list[newstudent.name] = newstudent;
+	string ans;
+	cout << "\nConfirm adding request? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		wating_list.push_back(info);
+		MESS("Request sent successfully");
+		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		return true;
+	}
 
-	
-
+	MESS("Request canceled successfully");
 	return false;
 }
 
