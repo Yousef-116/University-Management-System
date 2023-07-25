@@ -7,7 +7,7 @@ void Admin::menu()
 	while (true)
 	{
 		MENU("ADMIN MENU");
-		cout << " 1- Add new student\n 2- Add new course\n 3- View course students\n 4- Add course grade for student\n 5- View student courses\n 6- Edit course data\n 7- Logout\n -> ";
+		cout << " 1- Add new student\n 2- Add new course\n 3- View course students\n 4- Add course grade for student\n 5- View student courses\n 6- Edit course data\n 7- Log out\n -> ";
 		getline(cin, ans);
 		if (ans == "1")
 		{
@@ -35,7 +35,8 @@ void Admin::menu()
 		}
 		else if (ans == "7")
 		{
-			admin.log_out();
+			if (admin.log_out())
+				break;
 		}
 		else
 		{
@@ -50,11 +51,9 @@ bool Admin::log_in()
 	string name, password, ans;
 	while (true)
 	{
-		cout << "\tName: ";
-		getline(cin, name);
-		cout << "\tPassword: ";
-		getline(cin, password);
-		if (name == "admin123" && password == "pass123") {
+		cout << " Name: "; getline(cin, name);
+		cout << " Password: "; getline(cin, password);
+		if (name == "admin" && password == "pass123") {
 			MESS("You logged in successfully");
 			return true;
 		}
@@ -68,29 +67,44 @@ bool Admin::log_in()
 
 bool Admin::log_out()
 {
+	string ans;
+	cout << "Are you sure you want to log out? (Y/y) -> ";
+	getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		MESS("You logged out successfully");
+		return true;
+	}
 	return false;
 }
+
 void Admin::add_strudent()
 {
 }
+
 void Admin::add_course()
 {
 }
+
 void Admin::edit_course()
 {
 }
+
 void Admin::view_course_strudets()
 {
 }
+
 void Admin::set_course_grade()
 {
 }
+
 void Admin::view_student_courses()
 {
 }
+
 void Admin::write_file()
 {
 }
+
 void Admin::read_file()
 {
 }

@@ -54,12 +54,13 @@ public:
 	void menu();
 	bool log_in();
 	bool log_out();
+	bool regist();
 	void view_available_courses();
 	void filter_courses(); //(or filter by hours,or by requiremnt "bool " cours);
 	void view_course_details();
 	void register_for_a_course();
 	void view_all_courses();
-	void view_courses_grades_cumulative_GPA();
+	void view_courses_grades();
 	void edit_data();
 	static void write_file();
 	static void read_file();

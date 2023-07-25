@@ -31,7 +31,7 @@ void Student::menu()
 		}
 		else if(ans == "6")
 		{
-			the_student->view_courses_grades_cumulative_GPA();
+			the_student->view_courses_grades();
 		}
 		else if(ans == "7")
 		{
@@ -39,7 +39,8 @@ void Student::menu()
 		}
 		else if (ans == "8")
 		{
-			the_student->log_out();
+			if (the_student->log_out())
+				break;
 		}
 		else
 		{
@@ -55,8 +56,8 @@ bool Student::log_in()
 	string ch;
 	while (true)
 	{
-		cout << "\tUsername : "; getline(cin, this->account.email);
-		cout << "\tPasswrod : "; getline(cin, this->account.password);
+		cout << " Username: "; getline(cin, this->account.email);
+		cout << " Passwrod: "; getline(cin, this->account.password);
 		auto it = the_Students.find(this->account.email);
 		if (it != the_Students.end() && it->second.account.password == this->account.password)
 		{
@@ -75,10 +76,21 @@ bool Student::log_in()
 		}
 	}
 
-
 }
 
 bool Student::log_out()
+{
+	string ans;
+	cout << "Are you sure you want to log out? (Y/y) -> ";
+	getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		MESS("You logged out successfully");
+		return true;
+	}
+	return false;
+}
+
+bool Student::regist()
 {
 	return false;
 }
@@ -103,7 +115,7 @@ void Student::view_all_courses()
 {
 }
 
-void Student::view_courses_grades_cumulative_GPA()
+void Student::view_courses_grades()
 {
 }
 
