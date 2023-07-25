@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Admin.cpp" />
+    <ClCompile Include="Course.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="student.cpp" />
   </ItemGroup>

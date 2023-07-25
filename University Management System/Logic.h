@@ -3,8 +3,12 @@
 #include <list>
 #include <unordered_map>
 #include <string>
-
+#include <windows.h>
+#define MENU(word) Sleep(500); system("cls"); cout << "<<<<<<<<<<<<<<< " << word << " >>>>>>>>>>>>>>>\n\n"
+#define MESS(word) cout << "\n========== " << word << " ==========\n\n"; Sleep(300)
+#define INVALID cout << "\aInvalid choice, please try again..\n"
 using namespace std;
+
 
 struct Course {
 public:
@@ -75,12 +79,12 @@ public:
 	void add_course();
 	void edit_course();
 	void view_course_strudets();
-	void set_grade();
+	void set_course_grade();
 	void view_student_courses(); //(Finished - Progressed) of a specific student.
 	static void write_file(); 
 	static void read_file(); 
-
 };
+
 
 extern unordered_map<string, Student>the_Students; // {username, object}
 extern unordered_map<string, Student>the_Coursese; // {code, object}
