@@ -92,6 +92,29 @@ bool Student::log_out()
 
 bool Student::regist()
 {
+	MENU("Student Regist");
+	Student newstudent;
+	cout << "Enter \n";
+	cout << "\n\tName : ";
+	getline(cin, newstudent.name);
+	cout << "\tSSN : ";
+	cin >> newstudent.SSN;
+	//getline(cin, newstudent.SSN);
+	cout << "\n\tAddress : "; 
+	getline(cin, newstudent.address);
+	cout << "\n\tPhone number : ";
+	getline(cin, newstudent.phone_number);
+	cout << "\n\tPirsonal email : ";
+	getline(cin, newstudent.pirsonal_email);
+	cout << "\n\tPassword : ";
+	getline(cin, newstudent.account.password);
+	cout << "\n\tConfirme Password : ";
+	getline(cin, newstudent.account.password);
+
+	//wating_list[newstudent.name] = newstudent;
+
+	
+
 	return false;
 }
 

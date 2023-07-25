@@ -35,6 +35,7 @@ struct Account
 
 class Student 
 {
+public:
 	string name;
 	int SSN;
 	string address;
