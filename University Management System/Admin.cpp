@@ -7,7 +7,7 @@ void Admin::menu()
 	while (true)
 	{
 		MENU("ADMIN MENU");
-		cout << " 1- Add new student\n 2- Add new course\n3- Confirm add request\n 4- View course students\n 5- Add course grade for student\n 6- View student courses\n 7- Edit course data\n 8- Log out\n -> ";
+		cout << " 1- Add new student\n 2- Add new course\n 3- Confirm add request\n 4- View course students\n 5- Add course grade for student\n 6- View student courses\n 7- Edit course data\n 8- Log out\n -> ";
 		getline(cin, ans);
 		if (ans == "1")
 		{
@@ -167,9 +167,8 @@ void Admin::confirm_add_request()
 	if (ans == "Y" || ans == "y") {
 		Student newStudent(*it, 1, 15);
 		student_autoGenerate(newStudent);
-		cout << "the email: " << newStudent.personal_info.account.email << endl;
-		cout << "the password: " << newStudent.personal_info.account.password << endl;
 		the_Students.insert({ newStudent.personal_info.account.email, newStudent });
+		wating_list.erase(it);
 		MESS("The student added successfully");
 	}
 	cout << " Enter any thing to exit -> "; getline(cin, ans);
@@ -188,8 +187,7 @@ void Admin::add_course()
 	cin.ignore();
 	cout << "\tInstructor: "; getline(cin, newCourse.instructor);
 	cout << "\tIs it required? (Y/y) -> ";  getline(cin, ans);
-	if (ans == "Y" || ans == "y")
-		newCourse.is_required = true;
+	newCourse.is_required = (ans == "Y" || ans == "y" ? true : false);
 
 	cout << "\nConfirm adding course? (Y/y) -> "; getline(cin, ans);
 	if (ans == "Y" || ans == "y") {
@@ -204,6 +202,104 @@ void Admin::add_course()
 
 void Admin::edit_course()
 {
+	MENU("EDIT COURSE");
+	string ans;
+	if (the_Courses.size() == 0) {
+		MESS("There is no courses yet");
+		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	int i = 0;
+	cout << " The Coureses: ";
+	for (const auto& course : the_Courses)
+		cout << "\n\t" << ++i << "- " << course.second.name;
+
+	while (true)
+	{
+		cout << "\n\n Select a courese to edit or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > the_Courses.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+
+	auto it = the_Courses.begin();
+	advance(it, i - 1);
+
+	while (true)
+	{
+		MENU("EDIT COURSE");
+		cout << " Edit Course:"
+			"\n\t1- Name: " << it->second.name <<
+			"\n\t2- Code: " << it->second.code <<
+			"\n\t3- Is required: " << (it->second.is_required ? "Yes" : "NO") <<
+			"\n\t4- Max number of students: " << it->second.max_number_of_students <<
+			"\n\t5- Pre-required Coureses: ( ";
+		for (const auto& req : it->second.pre_required_courses)
+			cout << req << ", ";
+
+		cout << "\b\b )\n\t6- Hours: " << it->second.hours <<
+			"\n\t7- Instructor: " << it->second.instructor <<
+			"\n\t8- Go back";
+
+		string word;
+		while (true)
+		{
+			cout << "\n\t-> ";
+			getline(cin, ans);
+			if (ans == "1")
+			{
+				cout << "Enter the new Name: "; getline(cin, it->second.name);
+			}
+			else if (ans == "2")
+			{
+				cout << "Enter the new Code: "; getline(cin, it->second.code);
+			}
+			else if (ans == "3")
+			{
+				cout << "Is it required? (Y/y) -> "; getline(cin, ans);
+				it->second.is_required = (ans == "Y" || ans == "y" ? true : false);
+			}
+			else if (ans == "4")
+			{
+				cout << "Enter the new max number of students: ";
+				cin >> it->second.max_number_of_students; //cin.ignore();
+			}
+			else if (ans == "5")
+			{
+				MESS("Not available yet :)");
+				//cout << "\n1- "
+			}
+			else if (ans == "6")
+			{
+				cout << "Enter the new Hours: ";
+				cin >> it->second.max_number_of_students; cin.ignore();
+			}
+			else if (ans == "7")
+			{
+				cout << "Enter the new Instructor: "; getline(cin, it->second.instructor);
+			}
+			else if (ans == "8")
+			{
+				break;
+			}
+			else {
+				INVALID;
+				cout << " Try again? (Y/y) -> "; getline(cin, ans);
+				if (ans == "Y" || ans == "y")
+					continue;
+			}
+			break;
+		}
+		if (ans == "8")break;
+	}
 }
 
 void Admin::view_course_students()

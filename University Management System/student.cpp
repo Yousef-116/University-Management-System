@@ -18,7 +18,7 @@ void Student::menu()
 	while (true)
 	{
 		MENU("STUDENT MENU");
-		cout << " 1- View all available courses\n 2- Filter courses\n 3- View details of a specific course\n 4- Register for a course\n 5- View all courses\n 6- View my coureses\n 7- View my grades\n 8- Edit my data\n 9- Log out\n -> ";
+		cout << " 1- View all available courses\n 2- Filter courses\n 3- View details of a specific course\n 4- Register for a course\n 5- View all courses\n 6- View my coureses\n 7- View my grades\n 8- Edit personal info\n 9- Log out\n -> ";
 		getline(cin, ans);
 		if (ans == "1")
 		{
@@ -50,7 +50,7 @@ void Student::menu()
 		}
 		else if (ans == "8")
 		{
-			the_student->edit_data();
+			the_student->edit_personal_info();
 		}
 		else if (ans == "9")
 		{
@@ -150,20 +150,20 @@ void Student::view_available_courses()
 	bool flag = true;
 	while (it != the_Courses.end())
 	{
-		if(the_student->finished_courses.find(it->first) != the_student->finished_courses.end()) // check if he alrady finshed course  	
+		if (the_student->finished_courses.find(it->first) != the_student->finished_courses.end()) // check if he alrady finshed course  	
 		{
-			Course co= it->second;
-			for(auto check: co.pre_required_courses)
+			Course co = it->second;
+			for (auto check : co.pre_required_courses)
 			{
-				if(the_student->finished_courses.find(check)== the_student->finished_courses.end())
+				if (the_student->finished_courses.find(check) == the_student->finished_courses.end())
 				{
-					flag=false;
+					flag = false;
 					break;
 				}
 			}
 		}
 
-		if(flag){
+		if (flag) {
 			cout << i << "- " << it->second.name << "\n";
 			i++;
 		}
@@ -183,11 +183,16 @@ void Student::view_course_details()
 {
 	MENU("Courses Details");
 	string ans;
+	if (the_Courses.size() == 0) {
+		MESS("There is no coureses yet");
+		cout << "\nEnter any thing to exit -> "; getline(cin, ans);
+	}
+
 	auto it = the_Courses.begin();
 	int i = 1;
+	cout << "courses : \n";
 	while (it != the_Courses.end())
 	{
-		cout << "courses : \n";
 		cout << i << "- " << it->second.name << "\n";
 		i++;
 		it++;
@@ -220,17 +225,64 @@ void Student::view_course_details()
 	cout << "\n Course hours : " << it->second.hours;
 	cout << "\n Course instructor : " << it->second.instructor;
 	i = 1;
-	for(auto pre : it->second.pre_required_courses)
+	for (auto pre : it->second.pre_required_courses)
 	{
-		cout << i << "- " << pre<< "\n" ;
+		cout << i << "- " << pre << "\n";
 	}
-	string out;
-	cout << "\nEnter any thing to exit -> "; getline(cin, out);
+	cout << "\nEnter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::register_for_a_course()
 {
+	unordered_map<int, string>available_ones;
+	MENU("available Courses");
+	auto it = the_Courses.begin();
+	int i = 1;
+	bool flag = true;
+	while (it != the_Courses.end())
+	{
+		if (the_student->finished_courses.find(it->first) == the_student->finished_courses.end() && the_student->courses_in_progress.find(it->first) == the_student->courses_in_progress.end()) // check if he alrady finshed course  	
+		{
+			Course co = it->second;
+			for (auto check : co.pre_required_courses)
+			{
+				if (the_student->finished_courses.find(check) == the_student->finished_courses.end())
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				cout << i << "- " << it->second.name << "\n";
+				available_ones[i] = it->second.name;
+				i++;
+			}
+		}
+
+		it++;
+		flag = true;
+	}
 	
+	string ans;
+	while (true)
+	{
+		cout << "\n\n Select a course to register or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > available_ones.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+	
+	the_student->courses_in_progress.insert(available_ones[i]);
+	MESS("Added successfully");
+
+	cout << "Enter any thing to exit -> "; getline(cin, ans);
 
 }
 
@@ -252,22 +304,104 @@ void Student::view_all_courses()
 
 void Student::view_my_courese()
 {
+	MENU("View Your Courses");
+	int i = 1;
+	for (string co : the_student->courses_in_progress)
+	{
+		cout << i << "- " << co << "\n";
+		i++;
+	}
+	string ans;
+	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::view_courses_grades()
 {
 	MENU("All Courses grades");
 	auto it = the_student->finished_courses.begin();
-	while(it!= the_student->finished_courses.end())
+	while (it != the_student->finished_courses.end())
 	{
-		cout << it->first << " : " << it->second<<"\n";
+		cout << it->first << " : " << it->second << "\n";
 	}
 	string ans;
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
-void Student::edit_data()
+void Student::edit_personal_info()
 {
+	MENU("Edit your personal info");
+	cout << "your data : ";
+	cout << "\n1- Name : " << the_student->personal_info.name;
+	cout << "\n2- SSN : " << the_student->personal_info.SSN;
+	cout << "\n3- Adress : " << the_student->personal_info.address;
+	cout << "\n4- Pirsonal email : " << the_student->personal_info.pirsonal_email;
+	cout << "\n5- Account email : " << the_student->personal_info.account.email;
+	cout << "\n6- Accont password : " << the_student->personal_info.account.password;
+
+	while (true)
+	{
+		cout << "\nEnter what you need to change enter \'0\' to go back ->: ";
+		string ans;
+		getline(cin, ans);
+		if(ans=="0")
+		{
+			break;
+		}
+		else if (ans == "1")
+		{
+			cout << "Enter new Name : ";
+			getline(cin, the_student->personal_info.name);
+		}
+		else if (ans == "2")
+		{
+			cout << "Enter new SSN : ";
+			cin >> the_student->personal_info.SSN;
+			cin.ignore();
+		}
+		else if (ans == "3")
+		{
+			cout << "Enter new Address : ";
+			getline(cin, the_student->personal_info.address);
+		}
+		else if (ans == "4")
+		{
+			cout << "Enter new Pirsonal email : ";
+			getline(cin, the_student->personal_info.pirsonal_email);
+		}
+		else if (ans == "5")
+		{
+			cout << "Enter new Account email : ";
+			getline(cin, the_student->personal_info.account.email);
+		}
+		else if (ans == "6")
+		{
+			cout << "Enter new Account pssword : ";
+			getline(cin, the_student->personal_info.account.password);
+		}
+		else
+		{
+			INVALID;
+			cout << "Try again? (Y/y) -> "; getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				break;
+		}
+	}
+	//cout << "\nProgress hours : " << the_student->progress_hours;
+	//cout << "\nfinshd courses : \n";
+	//int i = 1;
+	//for (auto it = the_student->finished_courses.begin(); it != the_student->finished_courses.end(); it++)
+	//{
+	//	cout << i << "- " << it->first << "\t\t" << it->second << "\n";
+	//	i++;
+	//}
+	//i = 1;
+	//for (string co : the_student->courses_in_progress)
+	//{
+	//	cout << i << "- " << co << "\n";
+	//	i++;
+	//}
+	string ans;
+	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::write_file()
