@@ -2,12 +2,12 @@
 
 Student::Student()
 {
+	this->GPA = this->academic_year = this->id = this->max_hours_allowed = 0;
 }
 
-Student::Student(Personal_Info info, int id, short int academic_year, short int max_hours_allowed)
+Student::Student(Personal_Info info, short int academic_year, short int max_hours_allowed)
 {
-	this->personal_info = personal_info;
-	this->id = id;
+	this->personal_info = info;
 	this->academic_year = academic_year;
 	this->max_hours_allowed = max_hours_allowed;
 }
@@ -182,6 +182,7 @@ void Student::filter_courses()
 void Student::view_course_details()
 {
 	MENU("Courses Details");
+	string ans;
 	auto it = the_Courses.begin();
 	int i = 1;
 	while (it != the_Courses.end())
@@ -191,22 +192,40 @@ void Student::view_course_details()
 		i++;
 		it++;
 	}
-	string ans;
-	cout << "Enter course name : "; getline(cin, ans);
-	Course newone = the_Courses[ans];
-	cout << "\n Course name : " << newone.name;
-	cout << "\n Course code : " << newone.code;
-	cout << "\n Course requirment : " << newone.is_required;
-	cout << "\n Course maxmun number of students : " << newone.max_number_of_students;
-	cout << "\n Course hours : " << newone.hours;
-	cout << "\n Course instructor : " << newone.instructor;
+
+	while (true)
+	{
+		cout << "\n\n Select a course to veiw it's details or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > the_Courses.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+	it = the_Courses.begin();
+	advance(it, i - 1);
+
+	//cout << "Enter course number : "; getline(cin, ans);
+	//Course newone = the_Courses[ans];
+
+	cout << "\n Course name : " << it->second.name;
+	cout << "\n Course code : " << it->second.code;
+	cout << "\n Course requirment : " << it->second.is_required;
+	cout << "\n Course maxmun number of students : " << it->second.max_number_of_students;
+	cout << "\n Course hours : " << it->second.hours;
+	cout << "\n Course instructor : " << it->second.instructor;
 	i = 1;
-	for(auto pre : newone.pre_required_courses)
+	for(auto pre : it->second.pre_required_courses)
 	{
 		cout << i << "- " << pre<< "\n" ;
 	}
 	string out;
-	cout << "Enter any thing to exit -> "; getline(cin, out);
+	cout << "\nEnter any thing to exit -> "; getline(cin, out);
 }
 
 void Student::register_for_a_course()

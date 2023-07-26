@@ -84,6 +84,12 @@ bool Admin::log_out()
 	return false;
 }
 
+void student_autoGenerate(Student& newStudent)
+{
+	newStudent.id = ++student_id;
+	newStudent.personal_info.account.email = to_string(newStudent.id) + "@cis.com";
+}
+
 void Admin::add_student()
 {
 	MENU("ADD STUDENT");
@@ -103,8 +109,7 @@ void Admin::add_student()
 	cin.ignore();
 
 	//Automatic
-	newStudent.id = ++student_id;
-	newStudent.personal_info.account.email = to_string(newStudent.id) + "@cis.com";
+	student_autoGenerate(newStudent);
 
 	string ans;
 	cout << "\nConfirm adding student? (Y/y) -> "; getline(cin, ans);
@@ -137,7 +142,7 @@ void Admin::confirm_add_request()
 		cout << "\n\tAddress: " << req.address;
 		cout << "\n\tPhone number: " << req.phone_number;
 		cout << "\n\tPirsonal email: " << req.pirsonal_email;
-		cout << "\n\tPirsonal email: " << req.account.password;
+		cout << "\n\tpassword: " << req.account.password;
 	}
 
 	int i;
@@ -160,7 +165,10 @@ void Admin::confirm_add_request()
 	advance(it, i - 1);
 	cout << " Confirm adding request? (Y/y) -> "; getline(cin, ans);
 	if (ans == "Y" || ans == "y") {
-		Student newStudent(*it, ++student_id, 1, 15);
+		Student newStudent(*it, 1, 15);
+		student_autoGenerate(newStudent);
+		cout << "the email: " << newStudent.personal_info.account.email << endl;
+		cout << "the password: " << newStudent.personal_info.account.password << endl;
 		the_Students.insert({ newStudent.personal_info.account.email, newStudent });
 		MESS("The student added successfully");
 	}
@@ -173,15 +181,6 @@ void Admin::add_course()
 	string ans;
 	Course newCourse;
 	cout << "Enter Course: ";
-	/*
-	string name;
-	string code;
-	bool is_required;
-	int max_number_of_students;
-	list<string> pre_required_courses;// course name
-	int hours;
-	string instructor;
-	*/
 	cout << "\n\tName: "; getline(cin, newCourse.name);
 	cout << "\tCode: "; cin >> newCourse.code;
 	cout << "\tMax number of students: "; cin >> newCourse.max_number_of_students;
@@ -194,7 +193,7 @@ void Admin::add_course()
 
 	cout << "\nConfirm adding course? (Y/y) -> "; getline(cin, ans);
 	if (ans == "Y" || ans == "y") {
-		the_Courses.insert({ newCourse.code, newCourse });
+		the_Courses.insert({ newCourse.name, newCourse });
 		MESS("Course added successfully");
 	}
 	else

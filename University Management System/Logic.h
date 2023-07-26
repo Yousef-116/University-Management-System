@@ -54,7 +54,7 @@ public:
 
 public:
 	Student();
-	Student(Personal_Info info, int id, short int academic_year, short int max_hours_allowed);
+	Student(Personal_Info info, short int academic_year, short int max_hours_allowed);
 	void menu();
 	bool log_in();
 	bool log_out();
