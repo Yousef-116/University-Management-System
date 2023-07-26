@@ -1,7 +1,7 @@
 #include "Logic.h"
 
 unordered_map<string, Student>the_Students;
-unordered_map<string, Student>the_Courses;
+unordered_map<string, Course>the_Courses;
 list<Personal_Info>wating_list;
 Student* the_student = NULL;
 int student_id;
@@ -34,10 +34,7 @@ int main()
 		else if(ans == "3")
 		{
 			Student newStudent;
-			if (newStudent.regist())
-			{
-				the_student->menu();
-			}
+			newStudent.regist();
 		}
 		else if(ans == "4")
 		{

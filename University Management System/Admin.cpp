@@ -7,11 +7,11 @@ void Admin::menu()
 	while (true)
 	{
 		MENU("ADMIN MENU");
-		cout << " 1- Add new student\n 2- Add new course\n 3- View course students\n 4- Add course grade for student\n 5- View student courses\n 6- Edit course data\n 7- Log out\n -> ";
+		cout << " 1- Add new student\n 2- Add new course\n3- Confirm add request\n 4- View course students\n 5- Add course grade for student\n 6- View student courses\n 7- Edit course data\n 8- Log out\n -> ";
 		getline(cin, ans);
 		if (ans == "1")
 		{
-			admin.add_strudent();
+			admin.add_student();
 		}
 		else if (ans == "2")
 		{
@@ -19,21 +19,25 @@ void Admin::menu()
 		}
 		else if (ans == "3")
 		{
-			admin.view_course_strudets();
+			admin.confirm_add_request();
 		}
 		else if (ans == "4")
 		{
-			admin.set_course_grade();
+			admin.view_course_students();
 		}
 		else if (ans == "5")
 		{
-			admin.view_student_courses();
+			admin.set_course_grade();
 		}
 		else if (ans == "6")
 		{
-			admin.edit_course();
+			admin.view_student_courses();
 		}
 		else if (ans == "7")
+		{
+			admin.edit_course();
+		}
+		else if (ans == "8")
 		{
 			if (admin.log_out())
 				break;
@@ -80,19 +84,130 @@ bool Admin::log_out()
 	return false;
 }
 
-void Admin::add_strudent()
+void Admin::add_student()
 {
+	MENU("ADD STUDENT");
+	Student newStudent;
+	cout << "Enter \n";
+	cout << "\n\tName: ";
+	getline(cin, newStudent.personal_info.name);
+	cout << "\tSSN: ";
+	cin >> newStudent.personal_info.SSN;
+	cin.ignore();
+	cout << "\tPassword: ";
+	getline(cin, newStudent.personal_info.account.password);
+	cout << "\tAcadimic year: ";
+	cin >> newStudent.academic_year;
+	cout << "\tMax hours allowed: ";
+	cin >> newStudent.max_hours_allowed;
+	cin.ignore();
+
+	//Automatic
+	newStudent.id = ++student_id;
+	newStudent.personal_info.account.email = to_string(newStudent.id) + "@cis.com";
+
+	string ans;
+	cout << "\nConfirm adding student? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		the_Students.insert({ newStudent.personal_info.account.email, newStudent });
+		MESS("Request sent successfully");
+	}
+	else
+		MESS("Request canceled successfully");
+
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
+}
+
+void Admin::confirm_add_request()
+{
+	MENU("CONFIRM ADD REQUESTS");
+	string ans;
+	if (wating_list.size() == 0) {
+		MESS("There is no adding requests");
+		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	cout << "Add Requests: \n";
+	short int ctr = 0;
+	for (const auto& req : wating_list)
+	{
+		cout << ++ctr << "- \tName: " << req.name;
+		cout << "\n\tSSN: " << req.SSN;
+		cout << "\n\tAddress: " << req.address;
+		cout << "\n\tPhone number: " << req.phone_number;
+		cout << "\n\tPirsonal email: " << req.pirsonal_email;
+		cout << "\n\tPirsonal email: " << req.account.password;
+	}
+
+	int i;
+	while (true)
+	{
+		cout << "\n\n Select a request to confirm or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > wating_list.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+
+	auto it = wating_list.begin();
+	advance(it, i - 1);
+	cout << " Confirm adding request? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		Student newStudent(*it, ++student_id, 1, 15);
+		the_Students.insert({ newStudent.personal_info.account.email, newStudent });
+		MESS("The student added successfully");
+	}
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Admin::add_course()
 {
+	MENU("ADD COURSE");
+	string ans;
+	Course newCourse;
+	cout << "Enter Course: ";
+	/*
+	string name;
+	string code;
+	bool is_required;
+	int max_number_of_students;
+	list<string> pre_required_courses;// course name
+	int hours;
+	string instructor;
+	*/
+	cout << "\n\tName: "; getline(cin, newCourse.name);
+	cout << "\tCode: "; cin >> newCourse.code;
+	cout << "\tMax number of students: "; cin >> newCourse.max_number_of_students;
+	cout << "\tHours: "; cin >> newCourse.hours;
+	cin.ignore();
+	cout << "\tInstructor: "; getline(cin, newCourse.instructor);
+	cout << "\tIs it required? (Y/y) -> ";  getline(cin, ans);
+	if (ans == "Y" || ans == "y")
+		newCourse.is_required = true;
+
+	cout << "\nConfirm adding course? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		the_Courses.insert({ newCourse.code, newCourse });
+		MESS("Course added successfully");
+	}
+	else
+		MESS("Action canceled successfully");
+
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Admin::edit_course()
 {
 }
 
-void Admin::view_course_strudets()
+void Admin::view_course_students()
 {
 }
 

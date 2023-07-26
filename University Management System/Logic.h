@@ -9,14 +9,13 @@
 #define INVALID cout << "\aInvalid choice, please try again..\n"
 using namespace std;
 
-
 struct Course {
 public:
 	string name;
 	string code;
-	bool is_requiremed;
+	bool is_required;
 	int max_number_of_students;
-	list<string> pre_required_courses;
+	list<string> pre_required_courses;// course name
 	int hours;
 	string instructor;
 
@@ -24,7 +23,6 @@ public:
 	static void write_file();
 	static void read_file();
 };
-
 
 struct Account
 {
@@ -55,6 +53,8 @@ public:
 	double GPA;
 
 public:
+	Student();
+	Student(Personal_Info info, int id, short int academic_year, short int max_hours_allowed);
 	void menu();
 	bool log_in();
 	bool log_out();
@@ -64,6 +64,7 @@ public:
 	void view_course_details();
 	void register_for_a_course();
 	void view_all_courses();
+	void view_my_courese();
 	void view_courses_grades();
 	void edit_data();
 	static void write_file();
@@ -80,10 +81,11 @@ public:
 	void menu();
 	bool log_in();
 	bool log_out();
-	void add_strudent();
+	void add_student();
+	void confirm_add_request();
 	void add_course();
 	void edit_course();
-	void view_course_strudets();
+	void view_course_students();
 	void set_course_grade();
 	void view_student_courses(); //(Finished - Progressed) of a specific student.
 	static void write_file(); 
@@ -92,7 +94,8 @@ public:
 
 
 extern unordered_map<string, Student>the_Students; // {username, object}
-extern unordered_map<string, Student>the_Courses; // {code, object}
+extern unordered_map<string, Course> the_Courses; // {course name, object}
 extern list<Personal_Info>wating_list;
 extern int student_id;
 extern Student* the_student;
+
