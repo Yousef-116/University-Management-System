@@ -280,6 +280,7 @@ void Student::register_for_a_course()
 	}
 	
 	the_student->courses_in_progress.insert(available_ones[i]);
+	the_Courses[available_ones[i]].students.push_back(the_student->personal_info.name);
 	MESS("Added successfully");
 
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
