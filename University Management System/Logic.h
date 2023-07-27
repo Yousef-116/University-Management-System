@@ -67,6 +67,7 @@ public:
 	void register_for_a_course();
 	void view_all_courses();
 	void view_my_courese();
+	void view_finished_courses();
 	void view_courses_grades();
 	void edit_personal_info();
 	static void write_file();

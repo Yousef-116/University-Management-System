@@ -315,6 +315,19 @@ void Student::view_my_courese()
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
+void Student::view_finished_courses() 
+{
+	MENU("Viewing Finished Courses");
+	int i = 1;
+	for (auto course : the_student->finished_courses)
+	{
+		cout << i << "- " << course.first << "\tGrade: " << course.second << "\n";
+		i++;
+	}
+	string ans;
+	cout << "Enter any thing to exit -> "; getline(cin, ans);
+}
+
 void Student::view_courses_grades()
 {
 	MENU("All Courses grades");
