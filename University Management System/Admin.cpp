@@ -304,6 +304,43 @@ void Admin::edit_course()
 
 void Admin::view_course_students()
 {
+	MENU("List of all students in a specific course");
+	string ans;
+	if (the_Courses.size() == 0) {
+		MESS("There is no courses yet");
+		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	int i = 0;
+	cout << " The Courses: ";
+	for (const auto& course : the_Courses)
+		cout << "\n\t" << ++i << "- " << course.second.name;
+
+	while (true)
+	{
+		cout << "\n\n Select a course to view students in it or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > the_Courses.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+
+	auto it = the_Courses.begin();
+	advance(it, i - 1);
+
+	MENU("List of all students in a specific course");
+	int n = 1;
+	for (auto student : it->second.students) {
+		cout << n << " - " << student << endl;
+		n++;
+	}
 }
 
 void Admin::set_course_grade()
