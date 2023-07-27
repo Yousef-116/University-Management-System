@@ -133,7 +133,7 @@
     <ClCompile Include="Admin.cpp" />
     <ClCompile Include="Course.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="student.cpp" />
+    <ClCompile Include="Student.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

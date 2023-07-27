@@ -367,7 +367,7 @@ void Admin::view_student_courses()
 		cout << "\n\n Select a student to view student's courses or enter \'0\' to go back -> ";
 		cin >> i; cin.ignore();
 		if (i == 0) return;
-		else if (i < 0 || i > the_Courses.size()) {
+		else if (i < 0 || i > the_Students.size()) {
 			INVALID;
 			cout << "\n Try again? (Y/y) -> ";
 			getline(cin, ans);
@@ -381,11 +381,11 @@ void Admin::view_student_courses()
 	advance(it, i - 1);
 	
 	MENU("List of all courses (Finished - Progressed) of a specific student");
-	cout << "Current progressed courese";
-	it->second.view_all_courses();
+	cout << "Current progressed courses";
+	it->second.view_my_courses();
 	cout << "Finished courese with grades";
 	it->second.view_finished_courses();
-	
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Admin::write_file()

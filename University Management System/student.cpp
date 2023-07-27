@@ -1,10 +1,5 @@
 #include "Logic.h"
 
-Student::Student()
-{
-	this->GPA = this->academic_year = this->id = this->max_hours_allowed = 0;
-}
-
 Student::Student(Personal_Info info, short int academic_year, short int max_hours_allowed)
 {
 	this->personal_info = info;
@@ -34,7 +29,7 @@ void Student::menu()
 		}
 		else if (ans == "4")
 		{
-			the_student->register_for_a_course();
+			the_student->register_for_course();
 		}
 		else if (ans == "5")
 		{
@@ -42,7 +37,7 @@ void Student::menu()
 		}
 		else if (ans == "6")
 		{
-			the_student->view_my_courese();
+			the_student->view_my_courses();
 		}
 		else if (ans == "7")
 		{
@@ -232,7 +227,7 @@ void Student::view_course_details()
 	cout << "\nEnter any thing to exit -> "; getline(cin, ans);
 }
 
-void Student::register_for_a_course()
+void Student::register_for_course()
 {
 	unordered_map<int, string>available_ones;
 	MENU("available Courses");
@@ -290,54 +285,75 @@ void Student::register_for_a_course()
 void Student::view_all_courses()
 {
 	MENU("View All Courses");
-	auto it = the_Courses.begin();
-	int i = 1;
-	while (it != the_Courses.end())
-	{
-		cout << "courses : \n";
-		cout << i << "- " << it->second.name << "\n";
-		i++;
-		it++;
-	}
 	string ans;
+	if (the_Courses.size() == 0) {
+		MESS("There is no courses yet");
+	}
+	else {
+		auto it = the_Courses.begin();
+		int i = 1;
+		while (it != the_Courses.end())
+		{
+			cout << "courses : \n";
+			cout << i << "- " << it->second.name << "\n";
+			i++;
+			it++;
+		}
+	}
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
-void Student::view_my_courese()
+void Student::view_my_courses()
 {
 	MENU("View Your Courses");
-	int i = 1;
-	for (string co : the_student->courses_in_progress)
-	{
-		cout << i << "- " << co << "\n";
-		i++;
-	}
 	string ans;
+	if (the_student->courses_in_progress.size() == 0) {
+		MESS("There is no courses in progress yet");
+	}
+	else {
+		int i = 1;
+		for (string co : the_student->courses_in_progress)
+		{
+			cout << i << "- " << co << "\n";
+			i++;
+		}
+	}
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::view_finished_courses() 
 {
 	MENU("Viewing Finished Courses");
-	int i = 1;
-	for (auto course : the_student->finished_courses)
-	{
-		cout << i << "- " << course.first << "\tGrade: " << course.second << "\n";
-		i++;
-	}
 	string ans;
+	if (the_student->finished_courses.size() == 0) {
+		MESS("There is no finished courses yet");
+	}
+	else {
+		int i = 1;
+		for (auto course : the_student->finished_courses)
+		{
+			cout << i << "- " << course.first << "\tGrade: " << course.second << "\n";
+			i++;
+		}
+	}
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::view_courses_grades()
 {
 	MENU("All Courses grades");
-	auto it = the_student->finished_courses.begin();
-	while (it != the_student->finished_courses.end())
-	{
-		cout << it->first << " : " << it->second << "\n";
-	}
 	string ans;
+	if (the_student->finished_courses.size() == 0) {
+		MESS("There is no finished courses yet");
+	}
+	else 
+	{
+		auto it = the_student->finished_courses.begin();
+		while (it != the_student->finished_courses.end())
+		{
+			cout << it->first << " : " << it->second << "\n";
+		}
+	}
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
