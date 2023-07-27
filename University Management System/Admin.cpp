@@ -115,10 +115,10 @@ void Admin::add_student()
 	cout << "\nConfirm adding student? (Y/y) -> "; getline(cin, ans);
 	if (ans == "Y" || ans == "y") {
 		the_Students.insert({ newStudent.personal_info.account.email, newStudent });
-		MESS("Request sent successfully");
+		MESS("Student added successfully");
 	}
 	else
-		MESS("Request canceled successfully");
+		MESS("Adding process canceled successfully");
 
 	cout << " Enter any thing to exit -> "; getline(cin, ans);
 }
@@ -208,7 +208,12 @@ void add_pre_required_course(Course* course)
 	list<string>available_courses;
 	cout << "The available courses: \n";
 	for (const auto& crs : the_Courses) {
-		if (crs.second.name != course->name && crs.second.pre_required_courses.find(course->name) == crs.second.pre_required_courses.end()) {
+		if (
+			crs.second.name != course->name
+			&& crs.second.pre_required_courses.find(course->name) == crs.second.pre_required_courses.end()
+			&& course->pre_required_courses.find(crs.second.name) == course->pre_required_courses.end()
+			)
+		{
 			available_courses.push_back(crs.second.name);
 		}
 	}
@@ -240,7 +245,7 @@ void add_pre_required_course(Course* course)
 	}
 	auto it = available_courses.begin();
 	advance(it, i - 1);
-	
+
 	cout << "Confirm adding \'" << *it << "\' to pre-required courses? (Y/y) -> "; getline(cin, ans);
 	if (ans == "Y" || ans == "y") {
 		MESS("Adding process completed successfully");
@@ -270,7 +275,7 @@ void edit_pre_required_course(Course* course)
 
 	while (true)
 	{
-		cout << "\n\n Select a pre-required course to edit or enter \'0\' to go back -> "; 
+		cout << "\n\n Select a pre-required course to edit or enter \'0\' to go back -> ";
 		cin >> i; cin.ignore();
 		if (i == 0) break;
 		else if (i < 0 || i > course->pre_required_courses.size())
@@ -348,7 +353,7 @@ void Admin::edit_course()
 	}
 
 	int i = 0;
-	cout << " The Coureses: ";
+	cout << " The Courses: ";
 	for (const auto& course : the_Courses)
 		cout << "\n\t" << ++i << "- " << course.second.name;
 
@@ -379,11 +384,16 @@ void Admin::edit_course()
 			"\n\t2- Code: " << course->code <<
 			"\n\t3- Is required: " << (course->is_required ? "Yes" : "NO") <<
 			"\n\t4- Max number of students: " << course->max_number_of_students <<
-			"\n\t5- Pre-required Courses: ( ";
-		for (const auto& req : course->pre_required_courses)
-			cout << req << ", ";
+			"\n\t5- Pre-required Courses: ";
+		if (course->pre_required_courses.size() == 0)
+			cout << "No Pre-required courses yet";
+		else {
+			for (const auto& req : course->pre_required_courses)
+				cout << req << ", ";
+			cout << "\b\b )";
+		}
 
-		cout << "\b\b )\n\t6- Hours: " << course->hours <<
+		cout << "\n\t6- Hours: " << course->hours <<
 			"\n\t7- Instructor: " << course->instructor <<
 			"\n\t8- Go back";
 

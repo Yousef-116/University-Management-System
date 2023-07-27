@@ -262,7 +262,7 @@ void Student::register_for_course()
 		it++;
 		flag = true;
 	}
-	
+
 	string ans;
 	while (true)
 	{
@@ -278,7 +278,7 @@ void Student::register_for_course()
 		}
 		else break;
 	}
-	
+
 	the_student->courses_in_progress.insert(available_ones[i]);
 	the_Courses[available_ones[i]].students.push_back(the_student->personal_info.name);
 	MESS("Added successfully");
@@ -297,9 +297,9 @@ void Student::view_all_courses()
 	else {
 		auto it = the_Courses.begin();
 		int i = 1;
+		cout << "courses : \n";
 		while (it != the_Courses.end())
 		{
-			cout << "courses : \n";
 			cout << i << "- " << it->second.name << "\n";
 			i++;
 			it++;
@@ -326,7 +326,7 @@ void Student::view_my_courses()
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
-void Student::view_finished_courses() 
+void Student::view_finished_courses()
 {
 	MENU("Viewing Finished Courses");
 	string ans;
@@ -351,7 +351,7 @@ void Student::view_courses_grades()
 	if (the_student->finished_courses.size() == 0) {
 		MESS("There is no finished courses yet");
 	}
-	else 
+	else
 	{
 		auto it = the_student->finished_courses.begin();
 		while (it != the_student->finished_courses.end())
@@ -373,12 +373,12 @@ void Student::edit_personal_info()
 	cout << "\n5- Account email : " << the_student->personal_info.account.email;
 	cout << "\n6- Accont password : " << the_student->personal_info.account.password;
 
+	string ans;
 	while (true)
 	{
-		cout << "\nEnter what you need to change enter \'0\' to go back ->: ";
-		string ans;
+		cout << "\nEnter what you need to change or enter \'0\' to go back ->: ";
 		getline(cin, ans);
-		if(ans=="0")
+		if (ans == "0")
 		{
 			break;
 		}
@@ -435,8 +435,7 @@ void Student::edit_personal_info()
 	//	cout << i << "- " << co << "\n";
 	//	i++;
 	//}
-	string ans;
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
+	//cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::write_file()
