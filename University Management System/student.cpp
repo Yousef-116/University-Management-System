@@ -2,7 +2,7 @@
 
 Student::Student()
 {
-	this->GPA = this->academic_year = this->id = this->max_hours_allowed = 0;
+	this->academic_year = this->max_hours_allowed = this->progress_hours = 0;
 }
 
 Student::Student(Personal_Info info, short int academic_year, short int max_hours_allowed)
@@ -10,6 +10,7 @@ Student::Student(Personal_Info info, short int academic_year, short int max_hour
 	this->personal_info = info;
 	this->academic_year = academic_year;
 	this->max_hours_allowed = max_hours_allowed;
+	this->progress_hours = 0;
 }
 
 void Student::menu()
@@ -134,7 +135,7 @@ bool Student::regist()
 	if (ans == "Y" || ans == "y") {
 		wating_list.push_back(info);
 		MESS("Request sent successfully");
-		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 		return true;
 	}
 
@@ -172,7 +173,7 @@ void Student::view_available_courses()
 		flag = true;
 	}
 	string ans;
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Student::filter_courses()
@@ -185,7 +186,7 @@ void Student::view_course_details()
 	string ans;
 	if (the_Courses.size() == 0) {
 		MESS("There is no coureses yet");
-		cout << "\nEnter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 	}
 
 	auto it = the_Courses.begin();
@@ -220,7 +221,7 @@ void Student::view_course_details()
 
 	cout << "\n Course name : " << it->second.name;
 	cout << "\n Course code : " << it->second.code;
-	cout << "\n Is required : " << (it->second.is_required ? "Yes" : "No");
+	cout << "\n Course requirment : " << it->second.is_required;
 	cout << "\n Course maxmun number of students : " << it->second.max_number_of_students;
 	cout << "\n Course hours : " << it->second.hours;
 	cout << "\n Course instructor : " << it->second.instructor;
@@ -229,7 +230,7 @@ void Student::view_course_details()
 	{
 		cout << i << "- " << pre << "\n";
 	}
-	cout << "\nEnter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Student::register_for_course()
@@ -279,12 +280,24 @@ void Student::register_for_course()
 		else break;
 	}
 
+	if (the_Courses[available_ones[i]].currant_number_of_students + 1 > the_Courses[available_ones[i]].max_number_of_students)
+	{
+		MESS("sorry the number of students in this course is commpleted");
+		ENTER(ans);
+		return;
+	}
+	if (the_Courses[available_ones[i]].hours + the_student->progress_hours > the_student->max_hours_allowed)
+	{
+		cout << "\n sorry you can't regist for this course now becouse your maxmum hours is " << the_student->max_hours_allowed << "and with this course will be " << the_Courses[available_ones[i]].hours + the_student->progress_hours << "\n";
+		ENTER(ans);
+		return;
+	}
 	the_student->courses_in_progress.insert(available_ones[i]);
-	the_Courses[available_ones[i]].students.push_back(the_student->personal_info.name);
+	the_Courses[available_ones[i]].students_email.push_back(the_student->personal_info.account.email);
+	the_Courses[available_ones[i]].currant_number_of_students++;
+	the_student->progress_hours += the_Courses[available_ones[i]].hours;
 	MESS("Added successfully");
-
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
-
+	ENTER(ans);
 }
 
 void Student::view_all_courses()
@@ -297,15 +310,15 @@ void Student::view_all_courses()
 	else {
 		auto it = the_Courses.begin();
 		int i = 1;
-		cout << "courses : \n";
 		while (it != the_Courses.end())
 		{
+			cout << "courses : \n";
 			cout << i << "- " << it->second.name << "\n";
 			i++;
 			it++;
 		}
 	}
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Student::view_my_courses()
@@ -323,7 +336,7 @@ void Student::view_my_courses()
 			i++;
 		}
 	}
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Student::view_finished_courses()
@@ -341,7 +354,7 @@ void Student::view_finished_courses()
 			i++;
 		}
 	}
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Student::view_courses_grades()
@@ -357,9 +370,10 @@ void Student::view_courses_grades()
 		while (it != the_student->finished_courses.end())
 		{
 			cout << it->first << " : " << it->second << "\n";
+			++it;
 		}
 	}
-	cout << "Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Student::edit_personal_info()
@@ -373,10 +387,10 @@ void Student::edit_personal_info()
 	cout << "\n5- Account email : " << the_student->personal_info.account.email;
 	cout << "\n6- Accont password : " << the_student->personal_info.account.password;
 
-	string ans;
 	while (true)
 	{
-		cout << "\nEnter what you need to change or enter \'0\' to go back ->: ";
+		cout << "\nEnter what you need to change enter \'0\' to go back ->: ";
+		string ans;
 		getline(cin, ans);
 		if (ans == "0")
 		{
@@ -418,7 +432,7 @@ void Student::edit_personal_info()
 			INVALID;
 			cout << "Try again? (Y/y) -> "; getline(cin, ans);
 			if (ans != "Y" && ans != "y")
-				break;
+				return;
 		}
 	}
 	//cout << "\nProgress hours : " << the_student->progress_hours;
@@ -435,7 +449,6 @@ void Student::edit_personal_info()
 	//	cout << i << "- " << co << "\n";
 	//	i++;
 	//}
-	//cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
 void Student::write_file()

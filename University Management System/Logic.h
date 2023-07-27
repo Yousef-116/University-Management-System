@@ -7,7 +7,8 @@
 #include <fstream>
 #define MENU(word) Sleep(500); system("cls"); cout << "<<<<<<<<<<<<<<< " << word << " >>>>>>>>>>>>>>>\n\n"
 #define MESS(word) cout << "\n========== " << word << " ==========\n\n"; Sleep(300)
-#define INVALID cout << "\aInvalid choice, please try again..\n"
+#define INVALID MESS("\aInvalid choice, please try again..\n")
+#define ENTER(ans) cout << " Press Enter to exit -> "; getline(cin, ans);
 using namespace std;
 
 class Course {
@@ -16,13 +17,14 @@ public:
 	string code;
 	bool is_required;
 	int max_number_of_students;
+	int currant_number_of_students;
 	set<string> pre_required_courses;// course name
-	list<string> students; //student name
+	list<string> students_email; //student email
 	int hours;
 	string instructor;
 
 public:
-	Course() = default;
+	Course() ;
 	static void write_file();
 	static void read_file();
 };
@@ -100,3 +102,5 @@ extern unordered_map<string, Course> the_Courses; // {course name, object}
 extern list<Personal_Info>wating_list;
 extern int student_id;
 extern Student* the_student;
+
+

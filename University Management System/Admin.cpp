@@ -120,7 +120,7 @@ void Admin::add_student()
 	else
 		MESS("Adding process canceled successfully");
 
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Admin::confirm_add_request()
@@ -129,7 +129,7 @@ void Admin::confirm_add_request()
 	string ans;
 	if (wating_list.size() == 0) {
 		MESS("There is no adding requests");
-		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 		return;
 	}
 
@@ -171,7 +171,7 @@ void Admin::confirm_add_request()
 		wating_list.erase(it);
 		MESS("The student added successfully");
 	}
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Admin::add_course()
@@ -197,7 +197,7 @@ void Admin::add_course()
 	else
 		MESS("Action canceled successfully");
 
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void add_pre_required_course(Course* course)
@@ -221,7 +221,7 @@ void add_pre_required_course(Course* course)
 	if (available_courses.size() == 0)
 	{
 		MESS("There is no available courses to add to pre-required courses");
-		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 		return;
 	}
 
@@ -254,7 +254,7 @@ void add_pre_required_course(Course* course)
 	else
 		MESS("Adding process canceled successfully");
 
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void edit_pre_required_course(Course* course)
@@ -263,7 +263,7 @@ void edit_pre_required_course(Course* course)
 	string ans;
 	if (course->pre_required_courses.size() == 0) {
 		MESS("There is no Pre-courses to edit");
-		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 		return;
 	}
 
@@ -298,7 +298,7 @@ void edit_pre_required_course(Course* course)
 	}
 	else
 		MESS("Editing process canceled successfully");
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void remove_pre_required_course(Course* course)
@@ -307,7 +307,7 @@ void remove_pre_required_course(Course* course)
 	string ans;
 	if (course->pre_required_courses.size() == 0) {
 		MESS("There is no Pre-courses to remove");
-		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 		return;
 	}
 
@@ -339,102 +339,111 @@ void remove_pre_required_course(Course* course)
 	}
 	else
 		MESS("Removing process canceled successfully");
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
-void Admin::edit_course()
+Course* diplay_courses()
 {
-	MENU("EDIT COURSE");
 	string ans;
-	if (the_Courses.size() == 0) {
-		MESS("There is no courses yet");
-		cout << " Enter any thing to exit -> "; getline(cin, ans);
-		return;
+	if (the_Courses.size() == 0)
+	{
+		MESS("There is no Courses yet ");
+		ENTER(ans);
+		return NULL;
 	}
-
 	int i = 0;
 	cout << " The Courses: ";
-	for (const auto& course : the_Courses)
-		cout << "\n\t" << ++i << "- " << course.second.name;
+	for (const auto& Course : the_Courses)
+		cout << "\n\t" << ++i << "- " << Course.first;
 
 	while (true)
 	{
-		cout << "\n\n Select a courese to edit or enter \'0\' to go back -> ";
+		cout << "\n\n Select a course to edit or enter \'0\' to go back -> ";
 		cin >> i; cin.ignore();
-		if (i == 0) return;
+		if (i == 0) return NULL;
 		else if (i < 0 || i > the_Courses.size()) {
 			INVALID;
 			cout << "\n Try again? (Y/y) -> ";
 			getline(cin, ans);
 			if (ans != "Y" && ans != "y")
-				return;
+				return NULL;
 		}
 		else break;
 	}
 
 	auto it = the_Courses.begin();
 	advance(it, i - 1);
-	Course* course = &it->second;
+	return &it->second;
+}
 
+void Admin::edit_course()
+{
+	MENU("EDIT COURSE");
+	Course* course = diplay_courses();
+	if (course == NULL) return;
+
+	string ans;
 	while (true)
 	{
 		MENU("EDIT COURSE");
-		cout << " Edit Course:"
-			"\n\t1- Name: " << course->name <<
-			"\n\t2- Code: " << course->code <<
-			"\n\t3- Is required: " << (course->is_required ? "Yes" : "NO") <<
-			"\n\t4- Max number of students: " << course->max_number_of_students <<
-			"\n\t5- Pre-required Courses: ";
+		cout << " Edit \'" << course->name << "\' course:"
+			//"\n\t1- Name: " << course->name <<
+			"\n\t1- Code: " << course->code <<
+			"\n\t2- Is required: " << (course->is_required ? "Yes" : "NO") <<
+			"\n\t3- Max number of students: " << course->max_number_of_students <<
+			"\n\t4- Pre-required Courses: ";
 		if (course->pre_required_courses.size() == 0)
 			cout << "No Pre-required courses yet";
 		else {
+			cout << "( ";
 			for (const auto& req : course->pre_required_courses)
 				cout << req << ", ";
 			cout << "\b\b )";
 		}
 
-		cout << "\n\t6- Hours: " << course->hours <<
-			"\n\t7- Instructor: " << course->instructor <<
-			"\n\t8- Go back";
+		cout << "\n\t5- Hours: " << course->hours <<
+			"\n\t6- Instructor: " << course->instructor <<
+			"\n\t7- Go back";
 
 		string word;
 		while (true)
 		{
 			cout << "\n\t-> ";
 			getline(cin, ans);
-			if (ans == "1")
+			/*if (ans == "1")
 			{
 				cout << "Enter the new Name: "; getline(cin, course->name);
 			}
-			else if (ans == "2")
+			else*/ if (ans == "1")
 			{
 				cout << "Enter the new Code: "; getline(cin, course->code);
 			}
-			else if (ans == "3")
+			else if (ans == "2")
 			{
 				cout << "Is it required? (Y/y) -> "; getline(cin, ans);
 				course->is_required = (ans == "Y" || ans == "y" ? true : false);
 			}
-			else if (ans == "4")
+			else if (ans == "3")
 			{
 				cout << "Enter the new max number of students: ";
 				cin >> course->max_number_of_students; cin.ignore();
 			}
-			else if (ans == "5")
+			else if (ans == "4")
 			{
 				//MESS("Not available yet :)");
 				MENU("Edit Pre-required courses");
-				cout << "\n 1- Add pre-required course\n 2- Edit pre-required course\n 3- Remove pre-required course\n 4- Go back";
+				//cout << "\n 1- Add pre-required course\n 2- Edit pre-required course\n 3- Remove pre-required course\n 4- Go back";
+				cout << "\n 1- Add pre-required course\n 2- Remove pre-required course\n 3- Go back";
 				while (true)
 				{
 					cout << "\n\n -> "; getline(cin, ans);
 					if (ans == "1")
 						add_pre_required_course(course);
+					/*else if (ans == "2")
+						edit_pre_required_course(course);*/
 					else if (ans == "2")
-						edit_pre_required_course(course);
-					else if (ans == "3")
 						remove_pre_required_course(course);
-					else if (ans == "4")
+					else if (ans == "3")
 						break;
 					else {
 						INVALID;
@@ -445,18 +454,18 @@ void Admin::edit_course()
 					break;
 				}
 			}
-			else if (ans == "6")
+			else if (ans == "5")
 			{
 				cout << "Enter the new Hours: ";
 				cin >> course->max_number_of_students; cin.ignore();
 			}
-			else if (ans == "7")
+			else if (ans == "6")
 			{
 				cout << "Enter the new Instructor: "; getline(cin, course->instructor);
 			}
-			else if (ans == "8")
+			else if (ans == "7")
 			{
-				break;
+				return;
 			}
 			else {
 				INVALID;
@@ -466,7 +475,6 @@ void Admin::edit_course()
 			}
 			break;
 		}
-		if (ans == "8")break;
 	}
 }
 
@@ -474,45 +482,81 @@ void Admin::view_course_students()
 {
 	MENU("List of all students in a specific course");
 	string ans;
-	if (the_Courses.size() == 0) {
-		MESS("There is no courses yet");
-		cout << " Enter any thing to exit -> "; getline(cin, ans);
+	Course* course = diplay_courses();
+	if (course == NULL) return;
+
+	if (course->students_email.size() == 0) {
+		MESS("This course has no students yet");
+		ENTER(ans);
 		return;
 	}
 
-	int i = 0;
-	cout << " The Courses: ";
-	for (const auto& course : the_Courses)
-		cout << "\n\t" << ++i << "- " << course.second.name;
-
-	while (true)
-	{
-		cout << "\n\n Select a course to view students in it or enter \'0\' to go back -> ";
-		cin >> i; cin.ignore();
-		if (i == 0) return;
-		else if (i < 0 || i > the_Courses.size()) {
-			INVALID;
-			cout << "\n Try again? (Y/y) -> ";
-			getline(cin, ans);
-			if (ans != "Y" && ans != "y")
-				return;
-		}
-		else break;
-	}
-
-	auto it = the_Courses.begin();
-	advance(it, i - 1);
-
-	MENU("List of all students in a specific course");
 	int n = 1;
-	for (auto student : it->second.students) {
-		cout << n << " - " << student << endl;
+	cout << "\n Course \'" + course->name + "\' Students: ";
+	for (const string& email : course->students_email) {
+		cout << "\n\t" << n << "- " << the_Students[email].personal_info.name << " [ " << email << " ]";
 		n++;
 	}
+	ENTER(ans);
 }
 
 void Admin::set_course_grade()
 {
+	MENU("Set grades of of students");
+
+	Course* course = diplay_courses();
+	if (course == NULL) return;
+
+	string ans;
+	if (course->students_email.size() == 0) {
+		MESS("This course has no students yet");
+		ENTER(ans);
+		return;
+	}
+
+	//MENU("Course \'" + course->name + "\' Students");
+	//cout << "\n Course \'" + course->name + "\' Students: ";
+	short int i = 0;
+
+	auto it = course->students_email.begin();
+	Student* student_to_grade;
+	while (true)
+	{
+		MENU("Course \'" + course->name + "\' Students");
+		if (course->students_email.size() == 0) {
+			MESS("This course no longer has students");
+			ENTER(ans);
+			return;
+		}
+		i = 0;
+		for (const string& email : course->students_email) {
+			cout << "\n\t" << ++i << "- " << the_Students[email].personal_info.name << " [ " << email << " ]";
+		}
+		cout << "\n Select a student or enter \'0\' to exit -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > course->students_email.size()) {
+			INVALID;
+			cout << " Try again? (Y/y) -> "; getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else
+		{
+			it = course->students_email.begin();
+			advance(it, i - 1);
+			student_to_grade = &the_Students[*it];
+			cout << " Enter the student grade -> ";
+			cin >> i; cin.ignore();
+			cout << " Confirm grading the student? (Y/y) -> "; getline(cin, ans);
+			if (ans == "Y" || ans == "y") {
+				student_to_grade->finished_courses.insert({ course->name, i });
+				student_to_grade->courses_in_progress.erase(course->name);
+				course->students_email.erase(it);
+				the_student->progress_hours -= course->hours;
+			}
+		}
+	}
 }
 
 void Admin::view_student_courses()
@@ -521,7 +565,7 @@ void Admin::view_student_courses()
 	string ans;
 	if (the_Students.size() == 0) {
 		MESS("There is no students yet");
-		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		ENTER(ans);
 		return;
 	}
 
@@ -553,7 +597,7 @@ void Admin::view_student_courses()
 	it->second.view_my_courses();
 	cout << "Finished courese with grades";
 	it->second.view_finished_courses();
-	cout << " Enter any thing to exit -> "; getline(cin, ans);
+	ENTER(ans);
 }
 
 void Admin::write_file()
