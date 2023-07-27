@@ -16,7 +16,7 @@ public:
 	string code;
 	bool is_required;
 	int max_number_of_students;
-	list<string> pre_required_courses;// course name
+	set<string> pre_required_courses;// course name
 	list<string> students; //student name
 	int hours;
 	string instructor;
@@ -51,12 +51,12 @@ public:
 	short int max_hours_allowed;
 	short int progress_hours;
 	unordered_map<string, float>finished_courses; // (float for) grade of course for strudet;
-	set<string>courses_in_progress;
+	set<string>courses_in_progress; //course name
 	short int academic_year;
 	double GPA;
 
 public:
-	Student() = default;
+	Student();
 	Student(Personal_Info info, short int academic_year, short int max_hours_allowed);
 	void menu();
 	bool log_in();

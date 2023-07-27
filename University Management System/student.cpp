@@ -1,5 +1,10 @@
 #include "Logic.h"
 
+Student::Student()
+{
+	this->GPA = this->academic_year = this->id = this->max_hours_allowed = 0;
+}
+
 Student::Student(Personal_Info info, short int academic_year, short int max_hours_allowed)
 {
 	this->personal_info = info;
@@ -215,7 +220,7 @@ void Student::view_course_details()
 
 	cout << "\n Course name : " << it->second.name;
 	cout << "\n Course code : " << it->second.code;
-	cout << "\n Course requirment : " << it->second.is_required;
+	cout << "\n Is required : " << (it->second.is_required ? "Yes" : "No");
 	cout << "\n Course maxmun number of students : " << it->second.max_number_of_students;
 	cout << "\n Course hours : " << it->second.hours;
 	cout << "\n Course instructor : " << it->second.instructor;

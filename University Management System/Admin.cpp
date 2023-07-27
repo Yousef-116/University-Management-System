@@ -200,6 +200,143 @@ void Admin::add_course()
 	cout << " Enter any thing to exit -> "; getline(cin, ans);
 }
 
+void add_pre_required_course(Course* course)
+{
+	MENU("Add \'" + course->name + "\' Pre-courses");
+	string ans;
+	short int i, course_num;
+	list<string>available_courses;
+	cout << "The available courses: \n";
+	for (const auto& crs : the_Courses) {
+		if (crs.second.name != course->name && crs.second.pre_required_courses.find(course->name) == crs.second.pre_required_courses.end()) {
+			available_courses.push_back(crs.second.name);
+		}
+	}
+
+	if (available_courses.size() == 0)
+	{
+		MESS("There is no available courses to add to pre-required courses");
+		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	i = 0;
+	for (const string& ava_crs : available_courses)
+		cout << "\n " << ++i << "- " << ava_crs;
+
+	while (true)
+	{
+		cout << "\n\n Select a course to add to pre-required courses or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > available_courses.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+	auto it = available_courses.begin();
+	advance(it, i - 1);
+	
+	cout << "Confirm adding \'" << *it << "\' to pre-required courses? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		MESS("Adding process completed successfully");
+		course->pre_required_courses.insert(*it);
+	}
+	else
+		MESS("Adding process canceled successfully");
+
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
+}
+
+void edit_pre_required_course(Course* course)
+{
+	MENU("Edit \'" + course->name + "\' Pre-courses");
+	string ans;
+	if (course->pre_required_courses.size() == 0) {
+		MESS("There is no Pre-courses to edit");
+		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	short int i = 0;
+	set<string>::iterator pre = course->pre_required_courses.begin();
+	cout << " The Pre-courses: \n";
+	for (const string& pre_crs : course->pre_required_courses)
+		cout << "\n\t" << ++i << "- " << pre_crs;
+
+	while (true)
+	{
+		cout << "\n\n Select a pre-required course to edit or enter \'0\' to go back -> "; 
+		cin >> i; cin.ignore();
+		if (i == 0) break;
+		else if (i < 0 || i > course->pre_required_courses.size())
+		{
+			INVALID;
+			cout << " Try again? (Y/y) -> "; getline(cin, ans);
+			if (ans != "Y" || ans != "y")
+				return;
+		}
+		else break;
+	}
+
+	string new_pre_required;
+	cout << " Change \'" << *pre << "\' to: "; getline(cin, new_pre_required);
+	cout << " Confirm changing \'" << *pre << "\' to \'" << new_pre_required << "\'? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		course->pre_required_courses.erase(pre);
+		course->pre_required_courses.insert(new_pre_required);
+		MESS("Editing process completed successfully");
+	}
+	else
+		MESS("Editing process canceled successfully");
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
+}
+
+void remove_pre_required_course(Course* course)
+{
+	MENU("Remove \'" + course->name + "\' Pre-courses");
+	string ans;
+	if (course->pre_required_courses.size() == 0) {
+		MESS("There is no Pre-courses to remove");
+		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	short int i = 0;
+	set<string>::iterator pre = course->pre_required_courses.begin();
+	cout << " The Pre-courses: \n";
+	for (const string& pre_crs : course->pre_required_courses)
+		cout << "\n\t" << ++i << "- " << pre_crs;
+
+	while (true)
+	{
+		cout << "\n\n Select a pre-required course to remove or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) break;
+		else if (i < 0 || i > course->pre_required_courses.size())
+		{
+			INVALID;
+			cout << " Try again? (Y/y) -> "; getline(cin, ans);
+			if (ans != "Y" || ans != "y")
+				return;
+		}
+		else break;
+	}
+
+	cout << " Confirm removing \'" << *pre << "\' from pre-required courses? (Y/y) -> "; getline(cin, ans);
+	if (ans == "Y" || ans == "y") {
+		MESS("Removing process completed successfully");
+		course->pre_required_courses.erase(pre);
+	}
+	else
+		MESS("Removing process canceled successfully");
+	cout << " Enter any thing to exit -> "; getline(cin, ans);
+}
+
 void Admin::edit_course()
 {
 	MENU("EDIT COURSE");
@@ -232,21 +369,22 @@ void Admin::edit_course()
 
 	auto it = the_Courses.begin();
 	advance(it, i - 1);
+	Course* course = &it->second;
 
 	while (true)
 	{
 		MENU("EDIT COURSE");
 		cout << " Edit Course:"
-			"\n\t1- Name: " << it->second.name <<
-			"\n\t2- Code: " << it->second.code <<
-			"\n\t3- Is required: " << (it->second.is_required ? "Yes" : "NO") <<
-			"\n\t4- Max number of students: " << it->second.max_number_of_students <<
-			"\n\t5- Pre-required Coureses: ( ";
-		for (const auto& req : it->second.pre_required_courses)
+			"\n\t1- Name: " << course->name <<
+			"\n\t2- Code: " << course->code <<
+			"\n\t3- Is required: " << (course->is_required ? "Yes" : "NO") <<
+			"\n\t4- Max number of students: " << course->max_number_of_students <<
+			"\n\t5- Pre-required Courses: ( ";
+		for (const auto& req : course->pre_required_courses)
 			cout << req << ", ";
 
-		cout << "\b\b )\n\t6- Hours: " << it->second.hours <<
-			"\n\t7- Instructor: " << it->second.instructor <<
+		cout << "\b\b )\n\t6- Hours: " << course->hours <<
+			"\n\t7- Instructor: " << course->instructor <<
 			"\n\t8- Go back";
 
 		string word;
@@ -256,35 +394,55 @@ void Admin::edit_course()
 			getline(cin, ans);
 			if (ans == "1")
 			{
-				cout << "Enter the new Name: "; getline(cin, it->second.name);
+				cout << "Enter the new Name: "; getline(cin, course->name);
 			}
 			else if (ans == "2")
 			{
-				cout << "Enter the new Code: "; getline(cin, it->second.code);
+				cout << "Enter the new Code: "; getline(cin, course->code);
 			}
 			else if (ans == "3")
 			{
 				cout << "Is it required? (Y/y) -> "; getline(cin, ans);
-				it->second.is_required = (ans == "Y" || ans == "y" ? true : false);
+				course->is_required = (ans == "Y" || ans == "y" ? true : false);
 			}
 			else if (ans == "4")
 			{
 				cout << "Enter the new max number of students: ";
-				cin >> it->second.max_number_of_students; //cin.ignore();
+				cin >> course->max_number_of_students; cin.ignore();
 			}
 			else if (ans == "5")
 			{
-				MESS("Not available yet :)");
-				//cout << "\n1- "
+				//MESS("Not available yet :)");
+				MENU("Edit Pre-required courses");
+				cout << "\n 1- Add pre-required course\n 2- Edit pre-required course\n 3- Remove pre-required course\n 4- Go back";
+				while (true)
+				{
+					cout << "\n\n -> "; getline(cin, ans);
+					if (ans == "1")
+						add_pre_required_course(course);
+					else if (ans == "2")
+						edit_pre_required_course(course);
+					else if (ans == "3")
+						remove_pre_required_course(course);
+					else if (ans == "4")
+						break;
+					else {
+						INVALID;
+						cout << " Try again? (Y/y) -> "; getline(cin, ans);
+						if (ans != "Y" || ans != "y")
+							break;
+					}
+					break;
+				}
 			}
 			else if (ans == "6")
 			{
 				cout << "Enter the new Hours: ";
-				cin >> it->second.max_number_of_students; cin.ignore();
+				cin >> course->max_number_of_students; cin.ignore();
 			}
 			else if (ans == "7")
 			{
-				cout << "Enter the new Instructor: "; getline(cin, it->second.instructor);
+				cout << "Enter the new Instructor: "; getline(cin, course->instructor);
 			}
 			else if (ans == "8")
 			{
@@ -379,7 +537,7 @@ void Admin::view_student_courses()
 
 	auto it = the_Students.begin();
 	advance(it, i - 1);
-	
+
 	MENU("List of all courses (Finished - Progressed) of a specific student");
 	cout << "Current progressed courses";
 	it->second.view_my_courses();
