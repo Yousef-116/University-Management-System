@@ -16,13 +16,14 @@ public:
 	string code;
 	bool is_required;
 	int max_number_of_students;
+	int currant_number_of_students;
 	list<string> pre_required_courses;// course name
 	list<string> students; //student name
 	int hours;
 	string instructor;
 
 public:
-	Course() = default;
+	Course() ;
 	static void write_file();
 	static void read_file();
 };

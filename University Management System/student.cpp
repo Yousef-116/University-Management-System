@@ -5,6 +5,7 @@ Student::Student(Personal_Info info, short int academic_year, short int max_hour
 	this->personal_info = info;
 	this->academic_year = academic_year;
 	this->max_hours_allowed = max_hours_allowed;
+	this->progress_hours = 0;
 }
 
 void Student::menu()
@@ -257,7 +258,7 @@ void Student::register_for_course()
 		it++;
 		flag = true;
 	}
-	
+
 	string ans;
 	while (true)
 	{
@@ -273,9 +274,23 @@ void Student::register_for_course()
 		}
 		else break;
 	}
-	
+
+	if (the_Courses[available_ones[i]].currant_number_of_students + 1 > the_Courses[available_ones[i]].max_number_of_students)
+	{
+		MESS("sorry the number of students in this course is commpleted");
+		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+	if (the_Courses[available_ones[i]].hours + the_student->progress_hours > the_student->max_hours_allowed)
+	{
+		cout << "\n sorry you can't regist for this course now becouse your maxmum hours is "<< the_student->max_hours_allowed <<"and with this course will be "<< the_Courses[available_ones[i]].hours + the_student->progress_hours << "\n";
+		cout << "Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
 	the_student->courses_in_progress.insert(available_ones[i]);
 	the_Courses[available_ones[i]].students.push_back(the_student->personal_info.name);
+	the_Courses[available_ones[i]].currant_number_of_students++;
+	the_student->progress_hours += the_Courses[available_ones[i]].hours;
 	MESS("Added successfully");
 
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
@@ -321,7 +336,7 @@ void Student::view_my_courses()
 	cout << "Enter any thing to exit -> "; getline(cin, ans);
 }
 
-void Student::view_finished_courses() 
+void Student::view_finished_courses()
 {
 	MENU("Viewing Finished Courses");
 	string ans;
@@ -346,7 +361,7 @@ void Student::view_courses_grades()
 	if (the_student->finished_courses.size() == 0) {
 		MESS("There is no finished courses yet");
 	}
-	else 
+	else
 	{
 		auto it = the_student->finished_courses.begin();
 		while (it != the_student->finished_courses.end())
@@ -373,7 +388,7 @@ void Student::edit_personal_info()
 		cout << "\nEnter what you need to change enter \'0\' to go back ->: ";
 		string ans;
 		getline(cin, ans);
-		if(ans=="0")
+		if (ans == "0")
 		{
 			break;
 		}
