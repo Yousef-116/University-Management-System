@@ -312,6 +312,43 @@ void Admin::set_course_grade()
 
 void Admin::view_student_courses()
 {
+	MENU("List of all courses (Finished - Progressed) of a specific student");
+	string ans;
+	if (the_Students.size() == 0) {
+		MESS("There is no students yet");
+		cout << " Enter any thing to exit -> "; getline(cin, ans);
+		return;
+	}
+
+	int i = 0;
+	cout << " The Students: ";
+	for (const auto& student : the_Students)
+		cout << "\n\t" << ++i << "- " << student.second.personal_info.name;
+
+	while (true)
+	{
+		cout << "\n\n Select a student to view student's courses or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > the_Courses.size()) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+
+	auto it = the_Students.begin();
+	advance(it, i - 1);
+	
+	MENU("List of all courses (Finished - Progressed) of a specific student");
+	cout << "Current progressed courese";
+	it->second.view_all_courses();
+	cout << "Finished courese with grades";
+	it->second.view_finished_courses();
+	
 }
 
 void Admin::write_file()
