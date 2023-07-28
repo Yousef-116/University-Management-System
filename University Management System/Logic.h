@@ -8,7 +8,8 @@
 #define MENU(word) Sleep(500); system("cls"); cout << "<<<<<<<<<<<<<<< " << word << " >>>>>>>>>>>>>>>\n\n"
 #define MESS(word) cout << "\n========== " << word << " ==========\n\n"; Sleep(300)
 #define INVALID MESS("\aInvalid choice, please try again..\n")
-#define ENTER(ans) cout << " Press Enter to exit -> "; getline(cin, ans);
+#define ENTER(ans) cout << "\n Press Enter to exit -> "; getline(cin, ans);
+#define endl '\n'
 using namespace std;
 
 class Course {
@@ -103,4 +104,5 @@ extern list<Personal_Info>wating_list;
 extern int student_id;
 extern Student* the_student;
 
-
+extern set<string> split_to_set(const string& line);
+extern list<string> split_to_list(const string& line);

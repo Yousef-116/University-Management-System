@@ -2,7 +2,7 @@
 
 Student::Student()
 {
-	this->academic_year = this->max_hours_allowed = this->progress_hours = 0;
+	this->id = this->GPA = this->academic_year = this->max_hours_allowed = this->progress_hours = this->progress_hours = 0;
 }
 
 Student::Student(Personal_Info info, short int academic_year, short int max_hours_allowed)
@@ -310,10 +310,10 @@ void Student::view_all_courses()
 	else {
 		auto it = the_Courses.begin();
 		int i = 1;
+		cout << " Courses: \n";
 		while (it != the_Courses.end())
 		{
-			cout << "courses : \n";
-			cout << i << "- " << it->second.name << "\n";
+			cout << "\t\n" << i << "- " << it->second.name;
 			i++;
 			it++;
 		}
@@ -453,8 +453,120 @@ void Student::edit_personal_info()
 
 void Student::write_file()
 {
+	ofstream writeFile("Students-data");
+	if (!writeFile.is_open()) {
+		MESS("The Students data file is not found");
+		exit(0);
+	}
+	writeFile << student_id << endl;
+	writeFile << the_Students.size();
+	Student* st;
+	for (auto& student : the_Students)
+	{
+		st = &student.second;
+		writeFile << "\n--------------------------------------------------\n";
+		writeFile << st->personal_info.name << endl;
+		writeFile << st->personal_info.SSN << endl;
+		writeFile << (st->personal_info.address != "" ? st->personal_info.address : "#") << endl;
+		writeFile << (st->personal_info.phone_number != "" ? st->personal_info.phone_number : "#") << endl; //
+		writeFile << (st->personal_info.pirsonal_email != "" ? st->personal_info.pirsonal_email : "#") << endl; //
+		writeFile << st->personal_info.account.email << endl;
+		writeFile << st->personal_info.account.password << endl;
+		writeFile << st->id << endl;
+		writeFile << st->max_hours_allowed << endl;
+		writeFile << st->progress_hours << endl;
+		writeFile << st->academic_year << endl;
+		writeFile << st->GPA << endl;
+
+		if (st->finished_courses.size() == 0) writeFile << "#";
+		else {
+			for (const auto& fn_crs : st->finished_courses)
+				writeFile << fn_crs.first << ',' << fn_crs.second << '|';
+		}
+		writeFile << endl;
+		if (st->courses_in_progress.size() == 0) writeFile << "#";
+		else {
+			for (const auto& prg_crs : st->courses_in_progress)
+				writeFile << prg_crs << '|';
+		}
+	}
+	writeFile.close();
+}
+
+set<string> split_to_set(const string& line)
+{
+	if (line == "#")
+		return {};
+	set<string>st;
+	string temp;
+	for (const char& i : line)
+	{
+		if (i == '|') {
+			st.insert(temp);
+			temp = "";
+		}
+		else temp += i;
+	}
+
+	return st;
+}
+
+list<string> split_to_list(const string& line)
+{
+	if (line == "#")
+		return {};
+	list<string>ls;
+	string temp;
+	for (const char& i : line)
+	{
+		if (i == '|') {
+			ls.push_back(temp);
+			temp = "";
+		}
+		else temp += i;
+	}
+
+	return ls;
 }
 
 void Student::read_file()
 {
+	fstream readFile("Students-data");
+	if (!readFile.is_open()) {
+		MESS("The Students data file is not found");
+		exit(0);
+	}
+	readFile >> student_id;
+	int sz, i;
+	readFile >> sz;
+	Student st;
+	string line;
+	while (sz--)
+	{
+		readFile >> line; //"\n--------------------------------------------------\n";
+		getline(readFile >> std::ws, st.personal_info.name);
+		readFile >> st.personal_info.SSN;
+		readFile >> line; st.personal_info.address = (line != "#" ? line : "");
+		readFile >> line; st.personal_info.phone_number = (line != "#" ? line : "");
+		readFile >> line; st.personal_info.pirsonal_email = (line != "#" ? line : "");
+		readFile >> st.personal_info.account.email;
+		getline(readFile >> std::ws, st.personal_info.account.password);
+		readFile >> st.id;
+		readFile >> st.max_hours_allowed;
+		readFile >> st.progress_hours;
+		readFile >> st.academic_year;
+		readFile >> st.GPA;
+
+		readFile >> line; //finished courses
+		if (line != "#") {
+			set<string>crs_grade = split_to_set(line);
+			for (const string& crs : crs_grade) {
+				i = crs.find(",");
+				st.finished_courses.insert({ crs.substr(0, i), stof(crs.substr(i + 1, crs.size() - i)) });
+			}
+		}
+		readFile >> line; st.courses_in_progress = split_to_set(line);
+		the_Students.insert({ st.personal_info.account.email, st });
+	}
+	readFile.close();
 }
