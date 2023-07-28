@@ -151,7 +151,7 @@ void Student::view_available_courses()
 	bool flag = true;
 	while (it != the_Courses.end())
 	{
-		if (the_student->finished_courses.find(it->first) != the_student->finished_courses.end()) // check if he alrady finshed course  	
+		if (the_student->finished_courses.find(it->first) == the_student->finished_courses.end() && the_student->courses_in_progress.find(it->first) == the_student->courses_in_progress.end()) // check if he alrady finshed course  	
 		{
 			Course co = it->second;
 			for (auto check : co.pre_required_courses)
@@ -162,11 +162,10 @@ void Student::view_available_courses()
 					break;
 				}
 			}
-		}
-
-		if (flag) {
-			cout << i << "- " << it->second.name << "\n";
-			i++;
+			if (flag) {
+				cout << i << "- " << it->second.name << "\n";
+				i++;
+			}
 		}
 
 		it++;
