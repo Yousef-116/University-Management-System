@@ -66,7 +66,7 @@ public:
 	bool log_out();
 	bool regist();
 	void view_available_courses();
-	void filter_courses(); //(or filter by hours,or by requiremnt "bool " cours);
+	void filter_courses(); //( filter by hours,or by requiremnt "bool" cours);
 	void view_course_details();
 	void register_for_course();
 	void view_all_courses();

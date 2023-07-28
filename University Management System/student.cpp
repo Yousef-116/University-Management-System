@@ -177,6 +177,73 @@ void Student::view_available_courses()
 
 void Student::filter_courses()
 {
+	MENU("Filter Courses");
+	string ans;
+	int i;
+	cout << "\n 1- Filter by courses hours";
+	cout << "\n 2- Filter by courses is required";
+	while (true)
+	{
+		cout << "\n\n Select how filter you want or enter \'0\' to go back -> ";
+		cin >> i; cin.ignore();
+		if (i == 0) return;
+		else if (i < 0 || i > 2) {
+			INVALID;
+			cout << "\n Try again? (Y/y) -> ";
+			getline(cin, ans);
+			if (ans != "Y" && ans != "y")
+				return;
+		}
+		else break;
+	}
+	int counter = 1;
+	if (i == 1)
+	{
+		MENU("Filter Courses by hours");
+
+		cout << "\n Enter what hours 2, 3 or 4";
+		while (true)
+		{
+			cout << "\n\n Enter what hours 2, 3 or 4 or enter \'0\' to go back -> ";
+			cin >> i; cin.ignore();
+			if (i == 0) return;
+			else if (i < 2 || i > 4) {
+				INVALID;
+				cout << "\n Try again? (Y/y) -> ";
+				getline(cin, ans);
+				if (ans != "Y" && ans != "y")
+					return;
+			}
+			else break;
+		}
+		
+		for (auto co : the_Courses)
+		{
+			if (co.second.hours == i)
+			{
+				cout <<"\n " << counter++ << "- " << co.second.name;
+			}
+		}
+
+	}
+	else
+	{
+		MENU("Filter Courses by is required");
+
+		cout << "\n the required courses";
+		for (auto co : the_Courses)
+		{
+			if (co.second.is_required==true)
+			{
+				cout << "\n " << counter++ << "- " << co.second.name;
+			}
+		}
+	}
+
+	if(counter==1)
+		MESS("There is no coureses yet");
+
+	ENTER(ans);
 }
 
 void Student::view_course_details()
